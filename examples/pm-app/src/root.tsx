@@ -10,7 +10,7 @@
 //   useLoaderData
 // } from "remix";
 
-import global from "~/styles/global.css";
+// import global from "~/styles/global.css";
 // import type { User } from "./models";
 
 // export const links: LinksFunction = () => {

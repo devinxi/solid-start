@@ -26,6 +26,7 @@ function solidStartRouter(options) {
       }
       if (code.includes("const routes = $ROUTES;")) {
         const routes = await getRoutes({
+          baseDir: `src/${options.routesDir}`,
           pageExtensions: [
             "tsx",
             "jsx",
@@ -99,6 +100,7 @@ function solidStartDevServer(options) {
           const protocol = config.server.https ? "https" : "http";
           const port = config.server.port;
           const routes = await getRoutes({
+            baseDir: `src/${options.routesDir}`,
             pageExtensions: [
               "tsx",
               "jsx",
@@ -114,7 +116,9 @@ function solidStartDevServer(options) {
             // eslint-disable-next-line no-console
             console.log(
               `${label}\n${routes.pageRoutes
-                .flatMap(r => (r.children ? r.children : [r]))
+                .flatMap(r =>
+                  r.children ? r.children.map(c => ({ ...c, path: r.path + c.path })) : [r]
+                )
                 .map(r => `     ${c.blue(`${protocol}://localhost:${port}${r.path}`)}`)
                 .join("\n")}`
             );

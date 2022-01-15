@@ -6,15 +6,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String     @id @default(uuid())
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  email         String     @unique
+  id            String              @id @default(uuid())
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  email         String              @unique
   passwordHash  String
   nameFirst     String
   nameLast      String?
@@ -27,11 +27,11 @@ model User {
 }
 
 model Project {
-  id          String   @id @default(uuid())
+  id          String              @id @default(uuid())
   ownerId     String?
-  owner       User?    @relation(fields: [ownerId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  owner       User?               @relation(fields: [ownerId], references: [id])
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
   name        String
   description String?
   todoLists   TodoList[]
@@ -39,10 +39,10 @@ model Project {
 }
 
 model MembersOnProjects {
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId  String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
 
   @@id([userId, projectId])
 }
@@ -59,15 +59,15 @@ model TodoList {
 }
 
 model Todo {
-  id          String    @id @default(uuid())
+  id          String   @id @default(uuid())
   todoListId  String
-  todoList    TodoList  @relation(fields: [todoListId], references: [id], onDelete: Cascade)
+  todoList    TodoList @relation(fields: [todoListId], references: [id], onDelete: Cascade)
   ownerId     String?
-  owner       User?     @relation(fields: [ownerId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  owner       User?    @relation(fields: [ownerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   name        String
   description String?
-  completed   Boolean   @default(false)
+  completed   Boolean  @default(false)
   order       Int?
 }
