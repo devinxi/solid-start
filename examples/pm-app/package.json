@@ -6,9 +6,8 @@
   "type": "module",
   "scripts": {
     "dev:css": "postcss app/styles --base app/styles --dir app/dist/styles -w",
-    "dev:remix": "vite dev",
-    "dev:server": "node server/index.js",
-    "dev": "pm2-dev pm2.config.js",
+    "dev:vite": "vite",
+    "dev": "npm run db:update && pm2-dev pm2.config.cjs",
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
     "db:update": "prisma migrate dev",
