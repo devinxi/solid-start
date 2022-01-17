@@ -1,5 +1,6 @@
-import { Outlet } from "solid-app-router";
-
+import { Link, Outlet } from "solid-app-router";
+import { createResource } from "solid-js";
+import server from "solid-start/server";
 // import stylesUrl from "~/styles/routes/dashboard.css";
 // import { NavLink } from "~/ui/link";
 // import { MaxContainer } from "~/ui/max-container";
@@ -77,10 +78,34 @@ const navItems = [
 //     </div>
 //   );
 // }
+import fs from "fs";
+import { prisma } from "~/db.server";
+
+// const p = prisma;
 
 export default function DashboardLayout() {
   // let { currentYear } = useLoaderData();
-  return <div>Hello world</div>;
+  const [data] = createResource(
+    server(async () => {
+      try {
+        return {
+          hello: fs.readFileSync(new URL(import.meta.url).pathname, { encoding: "utf-8" }),
+          prisma: await prisma.todo.findMany()
+        };
+      } catch (e) {
+        console.error(e);
+      }
+    })
+  );
+
+  return (
+    <div>
+      Hello world
+      <pre>{JSON.stringify(data(), null, 2)}</pre>
+      <Link href="/">Sign out</Link>
+      <Outlet />
+    </div>
+  );
 }
 
 // export function CatchBoundary() {

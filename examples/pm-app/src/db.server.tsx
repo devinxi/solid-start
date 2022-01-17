@@ -8,7 +8,7 @@ import type {
   TodoList,
   User,
   UserSecure
-} from "src/models";
+} from "~/models";
 import bcrypt from "bcrypt";
 
 const __DEV__ = process.env.NODE_ENV === "development";
@@ -20,7 +20,7 @@ interface TodoListData {
   projectId?: TodoList["projectId"];
 }
 
-let prisma: PrismaClient;
+export let prisma: PrismaClient;
 
 declare global {
   var db: PrismaClient;

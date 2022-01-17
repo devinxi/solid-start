@@ -7,8 +7,10 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "moduleResolution": "node",
-    "target": "ES2019",
+    "module": "esnext",
+    "target": "esnext",
     "strict": true,
+    "types": [],
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]

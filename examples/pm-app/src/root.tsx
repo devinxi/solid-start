@@ -79,6 +79,7 @@
 // }
 
 // @refresh reload
+import { Suspense } from "solid-js";
 import { Links, Meta, Outlet, Scripts } from "solid-start/components";
 
 export default function Root() {
@@ -91,7 +92,9 @@ export default function Root() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <Suspense fallback={"Loading"}>
+          <Outlet />
+        </Suspense>
         <Scripts />
       </body>
     </html>
