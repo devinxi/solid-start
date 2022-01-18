@@ -1,0 +1,55 @@
+{
+  "private": true,
+  "name": "pm-app",
+  "description": "",
+  "license": "",
+  "type": "module",
+  "scripts": {
+    "dev:css": "postcss app/styles --base app/styles --dir app/dist/styles -w",
+    "dev:vite": "vite",
+    "dev": "npm run db:update && pm2-dev pm2.config.cjs",
+    "db:start": "docker compose up -d",
+    "db:stop": "docker compose down",
+    "db:update": "prisma migrate dev",
+    "db:studio": "prisma studio --browser none",
+    "db:reset": "prisma migrate reset --force",
+    "db:check": "docker ps",
+    "build:css": "postcss app/styles --base app/styles --dir app/dist/styles --env production",
+    "build:remix": "NODE_ENV=production remix build",
+    "build": "run-s build:*",
+    "typecheck": "tsc -b",
+    "deploy": "flyctl deploy",
+    "postinstall": "cp .env-example .env",
+    "start": "NODE_ENV=production node server/index.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.7.0",
+    "@tldraw/vec": "^1.4.3",
+    "@use-gesture/vanilla": "^10.2.4",
+    "bcrypt": "^5.0.1",
+    "clsx": "^1.1.1",
+    "match-sorter": "^6.3.1",
+    "nanoid": "^3.2.0",
+    "prisma": "^3.7.0",
+    "solid-app-router": "0.2.0",
+    "solid-js": "^1.3.1",
+    "solid-query": "^0.0.6",
+    "solid-start": "workspace:*",
+    "tinycolor2": "^1.4.2",
+    "validator": "^13.7.0",
+    "vite": "^2.7.10"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.13",
+    "@types/validator": "^13.7.1",
+    "dotenv": "^10.0.0",
+    "npm-run-all": "^4.1.5",
+    "pm2": "5.1.2",
+    "typescript": "^4.5.4"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "sideEffects": false
+}
