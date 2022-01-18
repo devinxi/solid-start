@@ -143,6 +143,7 @@ export class App extends BaseState {
     }
   };
 
+  // app level event handlers, run before state chart event handlers
   readonly onWheel: EventHandlers["wheel"] = info => {
     if (this.isPinching) return;
     console.log(info.delta);
