@@ -24,7 +24,7 @@ export const observable = createDecoratorAnnotation({
       set: v => {
         setSignal(() => v);
       },
-      configurable: false
+      configurable: true
     });
   }
 });
@@ -35,7 +35,7 @@ export const store = createDecoratorAnnotation({
     Object.defineProperty(target, key, {
       get: () => signal,
       set: v => setSignal(v),
-      configurable: false
+      configurable: true
     });
   }
 });

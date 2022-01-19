@@ -2,7 +2,7 @@
 import { Suspense, useTransition } from "solid-js";
 import { Links, Meta, Outlet, Scripts } from "solid-start/components";
 import { useIsRouting } from "solid-app-router";
-
+import "uno.css";
 export const [isPending, startTransition] = useTransition();
 
 export default function Root() {
@@ -74,6 +74,7 @@ export default function Root() {
         <Suspense fallback={"Loading"}>
           <Outlet />
         </Suspense>
+
         <Scripts />
       </body>
     </html>

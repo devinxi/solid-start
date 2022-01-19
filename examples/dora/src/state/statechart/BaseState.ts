@@ -59,16 +59,16 @@ export abstract class BaseState {
 
   // Transitions
 
-  transition(id: string) {
+  transition(id: string, info: any) {
     const next = this.states.get(id);
     if (!next) throw Error(`No state found with id ${id}`);
     const prev = this.currentState;
     if (prev) {
       this.prevState = prev;
-      prev.exit?.();
+      prev.exit?.(info);
     }
     this.setCurrentState(next);
-    next?.enter();
+    next?.enter(info);
   }
 
   // Helpers

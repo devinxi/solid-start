@@ -6,62 +6,187 @@ import { BaseState } from "./statechart/BaseState";
 import { State } from "./statechart/RootState";
 import Vec from "@tldraw/vec";
 import { batch } from "solid-js";
-// import * as states from "./states";
+import { nanoid } from "nanoid";
+import { isServer } from "solid-js/web";
 
 export class PointingCanvas extends State {
   static id = "pointingCanvas";
 
   onPointerUp: EventHandlers["pointer"] = info => {
-    // const { hoveredBlock } = this.app
-    // if (hoveredBlock?.canSelect) {
-    //   transaction(() => {
-    //     this.app.setSelectedBlocks([hoveredBlock])
-    this.parent.transition(Idle.id);
-    //   })
-    // } else {
-    //   this.app.setSelectedBlocks([])
-    // }
-  };
-
-  onPointerMove: EventHandlers["pointer"] = info => {
-    console.log(info.event);
-    let prevCamera = this.app.viewport.camera;
-    // this.app.viewport.camera = {
-    //   point:
+    this.parent.transition(Idle.id, info);
   };
 }
 
 export class Idle extends State {
   static id = "idle";
 
-  // onEnter = () => {
-  //   this.app.transition("selecting");
-  // };
-
   onPointerDown: EventHandlers["pointer"] = info => {
-    // const { hoveredBlock } = this.app
-    // if (hoveredBlock?.canSelect) {
-    //   transaction(() => {
-    //     this.app.setSelectedBlocks([hoveredBlock])
-    //     this.app.transition('selectedCharacters')
-    //   })
-    // } else {
-    //   this.app.setSelectedBlocks([])
-    // }
-    this.parent.transition(PointingCanvas.id);
+    if (info.order) {
+      return;
+    }
+
+    switch (info.targetType) {
+      case "node": {
+        this.parent.transition(PointingNode.id, info);
+        return;
+      }
+      case "canvas": {
+        this.parent.transition(PointingCanvas.id, info);
+        return;
+      }
+    }
+  };
+
+  onExit = () => {
+    this.app.hoveredNode = undefined;
+  };
+
+  onPointerEnter: EventHandlers["pointer"] = info => {
+    if (info.order) return;
+
+    switch (info.targetType) {
+      case "node": {
+        this.app.hoveredNode = info.node;
+        break;
+      }
+      // case TLTargetType.Selection: {
+      //   if (!(info.handle === "background" || info.handle === "center")) {
+      //     this.tool.transition("hoveringSelectionHandle", info);
+      //   }
+      //   break;
+      // }
+    }
+  };
+
+  onPointerLeave: EventHandlers["pointer"] = info => {
+    if (info.order) return;
+
+    switch (info.targetType) {
+      case "node": {
+        this.app.hoveredNode = undefined;
+        break;
+      }
+      // case TLTargetType.Selection: {
+      //   if (!(info.handle === "background" || info.handle === "center")) {
+      //     this.tool.transition("hoveringSelectionHandle", info);
+      //   }
+      //   break;
+      // }
+    }
+  };
+}
+
+class PointingNode extends State {
+  static id = "pointingNode";
+
+  onEnter = (info: any) => {
+    if (this.app.inputs.shiftKey) {
+      this.app.setSelectedNodes([...this.app.selectedIds, info.node.id]);
+    } else {
+      this.app.setSelectedNodes([info.node]);
+    }
+  };
+
+  onPointerUp: EventHandlers["pointer"] = info => {
+    this.parent.transition(Idle.id, info);
+  };
+
+  onPointerMove: EventHandlers["pointer"] = info => {
+    const { currentPoint, originPoint } = this.app.inputs;
+    if (Vec.dist(currentPoint, originPoint) > 50) {
+      this.parent.transition(Translating.id, info);
+    }
+  };
+}
+
+class Translating extends State {
+  static id = "translating";
+
+  onPointerUp: EventHandlers["pointer"] = info => {
+    this.parent.transition(Idle.id, info);
   };
 }
 
 class SelectTool extends State {
   static id = "select";
 
-  static states = [PointingCanvas, Idle];
+  static states = [PointingCanvas, Idle, PointingNode, Translating];
 
   static initial = Idle.id;
+}
 
-  onPointerDown: EventHandlers["pointer"] = info => {
-    this.transition(PointingCanvas.id);
-  };
+class Node {
+  id: string;
+
+  @observable type: string = "component";
+  // static initial = SelectTool.id;
+  constructor(pins: Pin[]) {
+    this.id = nanoid(4);
+    this.pins = pins;
+    makeObservable(this);
+  }
+
+  @observable position = [0, 0];
+
+  @observable size = [0, 0];
+
+  @observable pins: Pin[] = [];
+
+  @computed get box() {
+    return {
+      position: this.position,
+      size: this.size,
+      id: this.id
+    };
+  }
+}
+
+class Connection {
+  constructor(_from: Pin, _to: Pin) {
+    this.from = _from;
+    this.to = _to;
+    makeObservable(this);
+  }
+
+  @observable from: Pin;
+  @observable to: Pin;
+
+  @computed position() {
+    return {
+      start: this.from.position,
+      end: this.to.position
+    };
+  }
+}
+
+class Graph {
+  id = "";
+  constructor(public app: App) {
+    makeObservable(this);
+  }
+
+  @observable nodes: Node[] = [];
+  @observable connections: Connection[] = [];
+
+  addNode() {
+    this.nodes = [...this.nodes, new Node([])];
+  }
+}
+
+class Pin {
+  constructor() {
+    makeObservable(this);
+  }
+
+  @observable parentNode?: Node;
+
+  @observable metadata = {};
+
+  @observable offset = [0, 0];
+
+  @computed get position() {
+    return Vec.add(this.parentNode?.position ?? [0, 0], this.offset);
+  }
 }
 
 // events dispatched to the app,
@@ -75,6 +200,11 @@ export class App extends BaseState {
     this.initial = initial;
     makeObservable(this);
     this.enter();
+
+    if (!isServer) {
+      // @ts-ignore
+      window.app = this;
+    }
   }
 
   static states = [SelectTool];
@@ -86,6 +216,12 @@ export class App extends BaseState {
   viewport = new Viewport(this);
   // pathfinder = new PathFinder(this);
   inputs = new Inputs(this);
+  graph = new Graph(this);
+
+  @observable selectedIds: string[] = [];
+
+  @observable hoveredNode?: Node;
+
   // level = new Level(this, Level.DefaultMap);
 
   @observable state: GameState = {
@@ -112,19 +248,21 @@ export class App extends BaseState {
   //   return level.getBlockBy(block => block.canHover && block.hitTestPoint(currentPoint));
   // }
 
-  // @computed get selectedBlocks() {
-  //   return Array.from(this.state.selectedIds.values()).map(id => this.level.getBlockById(id)!);
-  // }
+  @computed get selectedNodes() {
+    return this.selectedIds.map(id => this.graph.nodes.find(node => node.id === id));
+  }
 
-  // @action setSelectedBlocks = (blocks: Block[] | string[]) => {
-  //   const { selectedIds } = this.state;
-  //   selectedIds.clear();
-  //   if (typeof blocks[0] === "string") {
-  //     (blocks as string[]).forEach(id => selectedIds.add(id));
-  //   } else {
-  //     (blocks as Block[]).forEach(block => selectedIds.add(block.id));
-  //   }
-  // };
+  @action setSelectedNodes = (blocks: Node[] | string[]) => {
+    const { selectedIds } = this;
+    let newIds: string[] = [];
+    if (typeof blocks[0] === "string") {
+      (blocks as string[]).forEach(id => newIds.push(id));
+    } else {
+      (blocks as Node[]).forEach(block => newIds.push(block.id));
+    }
+    console.log(newIds);
+    this.selectedIds = newIds;
+  };
 
   // @action setPaths = (paths: number[][][]) => {
   //   this.state.paths = paths;
@@ -149,18 +287,18 @@ export class App extends BaseState {
     console.log(info.delta);
     this.viewport.panCamera(info.delta);
     this.inputs.onWheel(info.event);
-    this.onPointerMove(info);
+    this.onPointerMove(info as any);
   };
 
   readonly onPointerDown: EventHandlers["pointer"] = info => {
     if ("clientX" in info.event) {
-      this.inputs.onPointerDown(info.point, info.event as PointerEvent);
+      this.inputs.onPointerDown(info.point, info.event);
     }
   };
 
   readonly onPointerUp: EventHandlers["pointer"] = info => {
     if ("clientX" in info.event) {
-      this.inputs.onPointerUp(info.point, info.event as PointerEvent);
+      this.inputs.onPointerUp(info.point, info.event);
     }
   };
 

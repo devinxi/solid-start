@@ -50,12 +50,12 @@ export type Verts = {
 };
 
 export type EventHandlerTypes = {
-  pointer: PointerEvent;
+  pointer: PointerEvent & { order?: number };
   touch: TouchEvent;
   keyboard: KeyboardEvent;
   gesture: WebKitGestureEvent;
   wheel: WheelEvent;
-  pinch: PointerEvent | WebKitGestureEvent | WheelEvent | TouchEvent;
+  pinch: (PointerEvent & { order?: number }) | WebKitGestureEvent | WheelEvent | TouchEvent;
 };
 
 export type EventHandlers = {
@@ -64,11 +64,17 @@ export type EventHandlers = {
     delta: number[];
     point: number[];
     offset: number[];
+    order: number;
+    targetType: string;
+    node?: any;
     event: EventHandlerTypes["pinch"];
   }) => void;
   pointer: (info: {
     point: number[];
-    event: EventHandlerTypes["pointer"] | EventHandlerTypes["wheel"];
+    order: number;
+    targetType: string;
+    node?: any;
+    event: EventHandlerTypes["pointer"];
   }) => void;
   keyboard: (info: { event: EventHandlerTypes["keyboard"] }) => void;
 };
