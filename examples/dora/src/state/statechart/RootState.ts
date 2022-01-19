@@ -1,5 +1,5 @@
 import { makeObservable } from "../mobx";
-import { App } from "../app";
+import { App } from "~/app/app";
 import { BaseState } from "./BaseState";
 
 export class State extends BaseState {
