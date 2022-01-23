@@ -1,0 +1,5 @@
+// Vitest Snapshot v1
+
+exports[`CombinedError > behaves like a normal Error 1`] = `"[Network] test"`;
+
+exports[`CombinedError behaves like a normal Error 1`] = `"[Network] test"`;

@@ -9,4 +9,4 @@ export * from "./StartContext";
 // server-side only exports
 export { default as StartServer } from "./StartServer";
 export { createHandler, composeMiddleware, serverModules } from "./StartServer";
-export type { RequestContext, Middleware, MiddlewareInput, MiddlewareFn } from "./StartServer";
+// export type { RequestContext, Middleware, MiddlewareInput, MiddlewareFn } from "./StartServer";
