@@ -12,7 +12,9 @@ import { SelectTool } from "./selectTool";
 
 import { Client } from "./solid-query/client";
 
-const client = new Client({});
+const client = new Client({
+  url: "/graphql"
+});
 
 console.log(client);
 
@@ -27,11 +29,15 @@ export class Node {
     makeObservable(this);
   }
 
+  @observable Component = () => {
+    return null;
+  };
   @observable position = [Math.random() * 100, Math.random() * 100];
 
   @observable size = [0, 0];
 
   @observable pins: Pin[] = [];
+  @observable collapsed = false;
 
   @computed get box() {
     return {
@@ -70,7 +76,9 @@ export class Graph {
   @observable connections: Connection[] = [];
 
   addNode() {
-    this.nodes = [...this.nodes, new Node([new Pin(), new Pin()])];
+    let node = new Node([new Pin(), new Pin()]);
+    this.nodes = [...this.nodes, node];
+    return node;
   }
 }
 

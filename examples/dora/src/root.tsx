@@ -1,7 +1,6 @@
 // @refresh reload
-import "virtual:windi.css";
 import { Suspense, useTransition } from "solid-js";
-import { Links, Outlet, Scripts } from "solid-start/components";
+import { Links, Meta, Outlet, Scripts } from "solid-start/components";
 import { useIsRouting } from "solid-app-router";
 export const [isPending, startTransition] = useTransition();
 
@@ -16,8 +15,8 @@ export default function Root() {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Hacker News Clone built with Solid" />
-        <link rel="stylesheet" href="/index.css" />
         <link rel="manifest" href="/manifest.webmanifest" />
+        <Meta />
         <Links />
       </head>
       <body>

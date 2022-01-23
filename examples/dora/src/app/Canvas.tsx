@@ -1,4 +1,5 @@
 import { For, useContext } from "solid-js";
+import { Dynamic } from "solid-js/web";
 import { appContext } from "~/app/AppContext";
 import { useCanvasEvents } from "~/app/useCanvasEvents";
 import { useGestureEvents } from "~/app/useGestureEvents";
@@ -25,7 +26,9 @@ export function Canvas() {
               transform: `scale(${app.viewport.cameraZoom}) translate(${app.viewport.cameraPosition[0]}px, ${app.viewport.cameraPosition[1]}px)`
             }}
           >
-            <For each={app.graph.nodes}>{(node, index) => <Node node={node} />}</For>
+            <For each={app.graph.nodes}>
+              {(node, index) => <Dynamic component={node.Component} node={node} />}
+            </For>
             {/* <div
                 style={{
                   padding: "10px",
@@ -38,7 +41,7 @@ export function Canvas() {
           </div>
         </div>
       </div>
-      <DebugApp />
+      {/* <DebugApp /> */}
     </div>
     // <DebugApp />
     // </div>

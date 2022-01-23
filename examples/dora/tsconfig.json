@@ -11,6 +11,7 @@
     "target": "esnext",
     "strict": true,
     "types": ["vitest"],
+    "resolveJsonModule": true,
     "baseUrl": ".",
     "experimentalDecorators": true,
     "paths": {
