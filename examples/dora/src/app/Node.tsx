@@ -66,18 +66,18 @@ export function TextNode(props: { node: any }) {
   return (
     <Node node={props.node}>
       <div
-        class="border-3 border-gray-200 rounded-xl h-full"
+        class="border-3 cursor-pointer border-gray-200 rounded-xl h-full"
         classList={{
           "border-gray-200": !hovered(),
           "border-gray-900": hovered(),
-          "border-blue-600": !!selected()
+          "border-black": !!selected()
         }}
       >
         <Show
           when={!props.node.collapsed}
           fallback={
             <div class="bg-white h-full rounded-xl" style={{ width: props.node.width + "px" }}>
-              {/* {props.node.title} */}
+              {props.node.title}
             </div>
           }
         >

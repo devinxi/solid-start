@@ -11,7 +11,9 @@ export function AppContext(props: PropsWithChildren<{}>) {
 
   const [data] = createResource(async () => {
     try {
+      showdown.setOption("disableForced4SpacesIndentedSublists", true);
       let converter = new showdown.Converter();
+      console.log(json);
       json.whiteBoardList[0].cardInstances.forEach(e => {
         let node = new TextNode();
         node.position = [e.pos.x, e.pos.y];
@@ -20,6 +22,7 @@ export function AppContext(props: PropsWithChildren<{}>) {
         node.text = converter.makeHtml(
           json.cardList.find(c => c.cardId === e.cardId)?.content ?? ""
         );
+        node.title = json.cardList.find(c => c.cardId === e.cardId)?.title ?? "";
         app.graph.nodes = [...app.graph.nodes, node];
       });
     } catch (e) {

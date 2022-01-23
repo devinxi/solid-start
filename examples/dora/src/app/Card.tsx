@@ -2,6 +2,7 @@ import { createTiptapEditor, createEditorTransaction } from "solid-tiptap";
 import { Editor } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import BubbleMenu from "@tiptap/extension-bubble-menu";
+import Link from "@tiptap/extension-link";
 import { createEffect, JSX, Show } from "solid-js";
 import { Toggle, Toolbar } from "solid-headless";
 import "./tiptap.css";
@@ -307,15 +308,18 @@ export default function Card(props: any): JSX.Element {
         get extensions() {
           return [
             StarterKit,
+            Link.configure({
+              openOnClick: true
+            }),
             BubbleMenu.configure({
               element: menuRef
             })
           ];
         },
         editorProps: {
-          editable: () => false,
+          editable: () => true,
           attributes: {
-            class: "p-8 focus:outline-none prose max-w-full"
+            class: "focus:outline-none max-w-full"
           }
         },
         get content() {
@@ -336,8 +340,10 @@ export default function Card(props: any): JSX.Element {
       >
         {/* <Show when={editor()}>{instance => <ToolbarContents editor={instance} />}</Show> */}
       </Toolbar>
-      <div class="bg-white overflow-y-scroll rounded-lg h-full" ref={containerRef}>
-        <div class="p-8 focus:outline-none prose max-w-full" innerHTML={props.content}></div>
+      <div class="bg-white overflow-y-scroll rounded-lg h-full">
+        <div class="p-8 prose max-w-full" ref={containerRef}>
+          <div class="focus:outline-none max-w-full" innerHTML={props.content}></div>
+        </div>
       </div>
     </>
   );

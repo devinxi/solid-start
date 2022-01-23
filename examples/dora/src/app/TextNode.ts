@@ -15,11 +15,13 @@ export class TextNode extends Node {
     return generateJSON(this.text, [StarterKit]);
   }
 
-  get title() {
-    let firstContent = this.json.content[0];
-    if (firstContent.content?.[0].text) {
-      return firstContent.content[0].text;
-    }
-    return "";
-  }
+  // get title() {
+  //   let firstContent = this.json.content[0];
+  //   if (firstContent.content?.[0].text) {
+  //     return firstContent.content[0].text;
+  //   }
+  //   return "";
+  // }
+
+  @observable title = "";
 }
