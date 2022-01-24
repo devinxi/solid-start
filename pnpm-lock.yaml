@@ -50,6 +50,8 @@ importers:
       '@bytemd/plugin-gfm': ^1.10.13
       '@bytemd/plugin-highlight': ^1.10.13
       '@bytemd/plugin-mermaid': ^1.10.13
+      '@cloudflare/kv-asset-handler': ^0.1.1
+      '@cloudflare/wrangler': ^1.19.7
       '@graphql-typed-document-node/core': ^3.1.1
       '@iconify-json/radix-icons': ^1.0.2
       '@prisma/client': ^3.7.0
@@ -84,6 +86,7 @@ importers:
       solid-js: ^1.3.3
       solid-query: ^0.0.6
       solid-start: workspace:*
+      solid-start-cloudflare-workers: workspace:*
       solid-start-node: workspace:^0.1.0-alpha.55
       solid-tiptap: ^0.3.3
       tinycolor2: ^1.4.2
@@ -102,6 +105,8 @@ importers:
       '@bytemd/plugin-gfm': 1.10.13_bytemd@1.10.13
       '@bytemd/plugin-highlight': 1.10.13_bytemd@1.10.13
       '@bytemd/plugin-mermaid': 1.10.13_bytemd@1.10.13
+      '@cloudflare/kv-asset-handler': 0.1.3
+      '@cloudflare/wrangler': 1.19.7
       '@graphql-typed-document-node/core': 3.1.1_graphql@16.2.0
       '@prisma/client': 3.8.1_prisma@3.8.1
       '@tiptap/core': 2.0.0-beta.166
@@ -126,6 +131,7 @@ importers:
       solid-js: 1.3.3
       solid-query: 0.0.6_solid-js@1.3.3
       solid-start: link:../../packages/start
+      solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
       solid-start-node: link:../../packages/start-node
       solid-tiptap: 0.3.3_36199983cb0282ec0a5b6129db0ed54b
       tinycolor2: 1.4.2
@@ -746,7 +752,6 @@ packages:
       tar: 6.1.11
     transitivePeerDependencies:
       - debug
-    dev: true
 
   /@gar/promisify/1.1.2:
     resolution: {integrity: sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==}
@@ -2819,12 +2824,11 @@ packages:
       follow-redirects: 1.14.7
     transitivePeerDependencies:
       - debug
-    dev: true
 
   /axios/0.21.4_debug@4.3.3:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.7
+      follow-redirects: 1.14.7_debug@4.3.3
     transitivePeerDependencies:
       - debug
     dev: true
@@ -4975,6 +4979,17 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+
+  /follow-redirects/1.14.7_debug@4.3.3:
+    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.3
     dev: true
 
   /forever-agent/0.6.1:

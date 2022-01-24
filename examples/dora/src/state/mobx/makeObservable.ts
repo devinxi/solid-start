@@ -28,7 +28,7 @@ export function makeObservable<T extends object, AdditionalKeys extends Property
   let annotations;
   try {
     // Default to decorators
-    annotations ??= collectStoredAnnotations(target);
+    annotations = annotations ? annotations : collectStoredAnnotations(target);
     // Annotate
     ownKeys(annotations).forEach(key => {
       annotations![key].make(target, key);

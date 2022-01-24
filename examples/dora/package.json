@@ -1,9 +1,10 @@
 {
   "private": true,
-  "name": "pm-app",
+  "name": "dora",
   "description": "",
   "license": "",
   "type": "module",
+  "main": "./dist/index.js",
   "scripts": {
     "dev:css": "postcss app/styles --base app/styles --dir app/dist/styles -w",
     "dev:vite": "vite",
@@ -16,11 +17,12 @@
     "db:check": "docker ps",
     "build:css": "postcss app/styles --base app/styles --dir app/dist/styles --env production",
     "build:remix": "NODE_ENV=production remix build",
-    "build": "solid-start build",
     "typecheck": "tsc -b",
-    "deploy": "flyctl deploy",
+    "fly:deploy": "flyctl deploy",
     "postinstall": "cp .env-example .env",
-    "start": "NODE_ENV=production node server/index.js"
+    "build": "solid-start build",
+    "start": "wrangler dev",
+    "deploy": "wrangler publish"
   },
   "dependencies": {
     "@bytemd/plugin-frontmatter": "^1.10.13",
@@ -29,6 +31,9 @@
     "@bytemd/plugin-mermaid": "^1.10.13",
     "@graphql-typed-document-node/core": "^3.1.1",
     "@prisma/client": "^3.7.0",
+    "@cloudflare/kv-asset-handler": "^0.1.1",
+    "@cloudflare/wrangler": "^1.19.7",
+    "solid-start-cloudflare-workers": "workspace:*",
     "@tiptap/core": "^2.0.0-beta.166",
     "@tiptap/extension-bubble-menu": "^2.0.0-beta.54",
     "@tiptap/extension-link": "^2.0.0-beta.36",

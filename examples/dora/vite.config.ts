@@ -4,6 +4,7 @@ import WindiCSS from "vite-plugin-windicss";
 import typo from "windicss/plugin/typography";
 import colors from "windicss/colors";
 import Icons from "unplugin-icons/vite";
+import cloudflare from "solid-start-cloudflare-workers";
 export default defineConfig({
   plugins: [
     WindiCSS({
@@ -62,7 +63,7 @@ export default defineConfig({
       /* options */ autoInstall: true,
       compiler: "solid"
     }),
-    solid()
+    solid({ adapter: cloudflare() })
   ],
   optimizeDeps: {
     exclude: [

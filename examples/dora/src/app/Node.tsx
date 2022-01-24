@@ -2,7 +2,7 @@ import { ComponentProps, createEffect, For, JSX, lazy, Show, useContext } from "
 import { appContext } from "~/app/AppContext";
 import { useShapeEvents } from "~/app/useShapeEvents";
 import * as a from "~/app/app";
-import { isServer } from "solid-js/web";
+import { Dynamic, isServer } from "solid-js/web";
 import ContentEditable from "./Card";
 
 export function useNode(props: { node: a.Node }) {
@@ -53,6 +53,27 @@ function PinSvg(props: ComponentProps<"svg">) {
 }
 
 import CaretRight from "~icons/radix-icons/caret-right";
+import CaretDown from "~icons/radix-icons/caret-down";
+import Cross from "~icons/radix-icons/cross-2";
+import Size from "~icons/radix-icons/size";
+
+function Icon(props) {
+  return (
+    <div
+      class="hover:bg-gray-200 hidden group-hover:block rounded-md"
+      onPointerDown={e => {
+        e.stopPropagation();
+      }}
+      onClick={e => {
+        console.log("heree");
+        e.stopPropagation();
+        props.onClick?.(e);
+      }}
+    >
+      <Dynamic component={props.icon} class="w-6 h-6" />
+    </div>
+  );
+}
 
 export function TextNode(props: { node: any }) {
   const node = useNode(props);
@@ -75,7 +96,7 @@ export function TextNode(props: { node: any }) {
       }}
     >
       <div
-        class="border-3 cursor-pointer border-gray-200 relative rounded-xl h-full"
+        class="border-3 cursor-pointer group border-gray-200 relative rounded-xl h-full"
         classList={{
           "border-gray-200": !node.hovered,
           "border-gray-900": node.hovered,
@@ -85,24 +106,14 @@ export function TextNode(props: { node: any }) {
         <Show
           when={!props.node.collapsed}
           fallback={
-            <div
-              class="bg-white h-full rounded-xl relative"
-              style={{ width: props.node.renderedSize[0] + "px" }}
-            >
-              <div class="absolute h-full flex items-center px-4">
-                <div
-                  class="hover:bg-gray-200 rounded-md"
-                  onPointerDown={e => {
-                    e.stopPropagation();
-                  }}
+            <div class="bg-white h-full rounded-xl relative">
+              <div class="absolute flex h-full items-center px-4">
+                <Icon
+                  icon={CaretRight}
                   onClick={e => {
-                    console.log("heree");
                     node.node.collapsed = false;
-                    e.stopPropagation();
                   }}
-                >
-                  <CaretRight class="w-8 h-8" />
-                </div>
+                />
               </div>
               <div class="flex w-full h-full font-normal items-center justify-center">
                 {props.node.title}
@@ -110,20 +121,50 @@ export function TextNode(props: { node: any }) {
             </div>
           }
         >
-          <ContentEditable
-            onEditorMount={e => {}}
-            content={props.node.text}
-            editable={props.node.state === "editing"}
-          />
-          <div
-            class="absolute h-full w-full top-0 left-0"
-            onPointerDown={e => {
-              e.stopPropagation();
-            }}
-            onPointerUp={e => {
-              e.stopPropagation();
-            }}
-          ></div>
+          <div class="pt-6 h-full group bg-white rounded-xl">
+            <ContentEditable
+              onEditorMount={e => {}}
+              content={props.node.text}
+              editable={props.node.state === "editing"}
+            />
+            {/* <div
+              class="absolute h-full w-full top-0 left-0"
+              onPointerDown={e => {
+                e.stopPropagation();
+              }}
+              onPointerUp={e => {
+                e.stopPropagation();
+              }}
+            ></div> */}
+            <div
+              class="absolute w-full flex top-0 gap-3 left-0 p-4"
+              onPointerDown={e => {
+                e.stopPropagation();
+              }}
+              onPointerUp={e => {
+                e.stopPropagation();
+              }}
+            >
+              <Icon
+                icon={CaretDown}
+                onClick={e => {
+                  node.node.collapsed = true;
+                }}
+              />
+              <Icon
+                icon={Cross}
+                onClick={e => {
+                  node.node.collapsed = true;
+                }}
+              />
+              <Icon
+                icon={Size}
+                onClick={e => {
+                  node.node.collapsed = true;
+                }}
+              />
+            </div>
+          </div>
         </Show>
       </div>
     </div>
