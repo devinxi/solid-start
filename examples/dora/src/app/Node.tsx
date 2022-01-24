@@ -3,13 +3,10 @@ import { appContext } from "~/app/AppContext";
 import { useShapeEvents } from "~/app/useShapeEvents";
 import * as a from "~/app/app";
 import { isServer } from "solid-js/web";
-import Card from "./Card";
-const Editor = isServer ? () => null : lazy(() => import("./Editor"));
+import ContentEditable from "./Card";
 
-export function Node(props: { node: a.Node; children: any }) {
+export function useNode(props: { node: a.Node }) {
   const { app } = useContext(appContext);
-  const selected = () => app.selectedNodes.find(n => n!.id === props.node.id);
-  const hovered = () => app.hoveredNode?.id === props.node.id;
 
   let ref: HTMLDivElement;
   createEffect(() => {
@@ -17,31 +14,34 @@ export function Node(props: { node: a.Node; children: any }) {
     props.node.size = [rect.width, rect.height];
   });
 
-  return (
-    <div
-      {...useShapeEvents(props.node)}
-      onPointerDown={e => {}}
-      ref={ref!}
-      class="relative"
-      style={{
-        width: props.node.size[0] + "px",
-        height: props.node.collapsed ? "60px" : props.node.size[1] + "px",
-        position: "absolute",
+  return {
+    set ref(value: HTMLDivElement) {
+      ref = value;
+    },
+    get ref() {
+      return ref;
+    },
+    get selected() {
+      return app.selectedNodes.find(n => n!.id === props.node.id);
+    },
+    get hovered() {
+      return app.hoveredNode?.id === props.node.id;
+    },
+    get node() {
+      return props.node;
+    },
+    get style() {
+      return {
+        position: "absolute" as const,
         top: `${props.node.position[1]}px`,
         left: `${props.node.position[0]}px`
-      }}
-    >
-      {props.children}
-    </div>
-  );
+      };
+    },
+    get events() {
+      return useShapeEvents(props.node);
+    }
+  };
 }
-
-//  {/* <div class="relative p-1">
-//       {/* <Editor /> */}
-//       {/* {props.node.type}
-//       <input class="w-full" /> */}
-//       <For each={props.node.pins}>{pin => <Pin pin={pin} />}</For>
-//     </div> */}
 
 function PinSvg(props: ComponentProps<"svg">) {
   return (
@@ -52,39 +52,81 @@ function PinSvg(props: ComponentProps<"svg">) {
   );
 }
 
+import CaretRight from "~icons/radix-icons/caret-right";
+
 export function TextNode(props: { node: any }) {
+  const node = useNode(props);
+
   createEffect(() => {
     let firstContent = props.node.json.content[0];
     if (firstContent.content?.[0].text) {
       console.log(firstContent.content[0].text);
     }
   });
-  const { app } = useContext(appContext);
-  const selected = () => app.selectedNodes.find(n => n!.id === props.node.id);
-  const hovered = () => app.hoveredNode?.id === props.node.id;
 
   return (
-    <Node node={props.node}>
+    <div
+      {...node.events}
+      ref={node.ref!}
+      style={{
+        ...node.style,
+        width: props.node.renderedSize[0] + "px",
+        height: props.node.collapsed ? "67px" : props.node.renderedSize[1] + "px"
+      }}
+    >
       <div
-        class="border-3 cursor-pointer border-gray-200 rounded-xl h-full"
+        class="border-3 cursor-pointer border-gray-200 relative rounded-xl h-full"
         classList={{
-          "border-gray-200": !hovered(),
-          "border-gray-900": hovered(),
-          "border-black": !!selected()
+          "border-gray-200": !node.hovered,
+          "border-gray-900": node.hovered,
+          "border-black": !!node.selected
         }}
       >
         <Show
           when={!props.node.collapsed}
           fallback={
-            <div class="bg-white h-full rounded-xl" style={{ width: props.node.width + "px" }}>
-              {props.node.title}
+            <div
+              class="bg-white h-full rounded-xl relative"
+              style={{ width: props.node.renderedSize[0] + "px" }}
+            >
+              <div class="absolute h-full flex items-center px-4">
+                <div
+                  class="hover:bg-gray-200 rounded-md"
+                  onPointerDown={e => {
+                    e.stopPropagation();
+                  }}
+                  onClick={e => {
+                    console.log("heree");
+                    node.node.collapsed = false;
+                    e.stopPropagation();
+                  }}
+                >
+                  <CaretRight class="w-8 h-8" />
+                </div>
+              </div>
+              <div class="flex w-full h-full font-normal items-center justify-center">
+                {props.node.title}
+              </div>
             </div>
           }
         >
-          <Card content={props.node.text} />
+          <ContentEditable
+            onEditorMount={e => {}}
+            content={props.node.text}
+            editable={props.node.state === "editing"}
+          />
+          <div
+            class="absolute h-full w-full top-0 left-0"
+            onPointerDown={e => {
+              e.stopPropagation();
+            }}
+            onPointerUp={e => {
+              e.stopPropagation();
+            }}
+          ></div>
         </Show>
       </div>
-    </Node>
+    </div>
   );
 }
 

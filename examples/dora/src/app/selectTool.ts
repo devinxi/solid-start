@@ -2,9 +2,12 @@ import { EventHandlers } from "~/state/types";
 import { State } from "~/state/statechart/RootState";
 import Vec from "@tldraw/vec";
 
-
 export class PointingCanvas extends State {
   static id = "pointingCanvas";
+
+  onEnter = () => {
+    this.app.selectedIds = [];
+  };
 
   onPointerUp: EventHandlers["pointer"] = info => {
     this.parent.transition(Idle.id, info);
@@ -36,8 +39,7 @@ export class Idle extends State {
   };
 
   onPointerEnter: EventHandlers["pointer"] = info => {
-    if (info.order)
-      return;
+    if (info.order) return;
 
     switch (info.targetType) {
       case "node": {
@@ -54,8 +56,7 @@ export class Idle extends State {
   };
 
   onPointerLeave: EventHandlers["pointer"] = info => {
-    if (info.order)
-      return;
+    if (info.order) return;
 
     switch (info.targetType) {
       case "node": {

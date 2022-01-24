@@ -3,7 +3,7 @@ import solid from "solid-start";
 import WindiCSS from "vite-plugin-windicss";
 import typo from "windicss/plugin/typography";
 import colors from "windicss/colors";
-
+import Icons from "unplugin-icons/vite";
 export default defineConfig({
   plugins: [
     WindiCSS({
@@ -57,6 +57,10 @@ export default defineConfig({
         },
         plugins: [typo()]
       }
+    }),
+    Icons({
+      /* options */ autoInstall: true,
+      compiler: "solid"
     }),
     solid()
   ],

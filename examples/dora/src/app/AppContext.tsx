@@ -1,4 +1,4 @@
-import { createContext, createResource, PropsWithChildren } from "solid-js";
+import { createComputed, createContext, createResource, PropsWithChildren } from "solid-js";
 import { App } from "~/app/app";
 import json from "./All-Data.json";
 import { TextNode } from "./TextNode";
@@ -19,6 +19,7 @@ export function AppContext(props: PropsWithChildren<{}>) {
         node.position = [e.pos.x, e.pos.y];
         node.collapsed = e.showTitleOnly;
         node.size = [e.rect.width, e.rect.height];
+        node.renderedSize = [e.rect.width, e.rect.height];
         node.text = converter.makeHtml(
           json.cardList.find(c => c.cardId === e.cardId)?.content ?? ""
         );
@@ -29,6 +30,10 @@ export function AppContext(props: PropsWithChildren<{}>) {
       console.log(e);
     }
   });
+
+  // createComputed(() => {
+  //   data();
+  // });
 
   return <appContext.Provider value={{ app }}>{props.children}</appContext.Provider>;
 }

@@ -1,5 +1,5 @@
 import { JSX } from "solid-js";
-import Card from "~/app/Card";
+import ContentEditable from "~/app/Card";
 import "virtual:windi.css";
 
 const CONTENT = `
@@ -37,7 +37,7 @@ export default function App(): JSX.Element {
   return (
     <div class="w-screen h-screen bg-gradient-to-bl from-sky-400 to-blue-500 flex items-center justify-center">
       <div class="flex-1 m-16">
-        <Card content={CONTENT} />
+        <ContentEditable content={CONTENT} />
       </div>
     </div>
   );

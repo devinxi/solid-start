@@ -24,4 +24,8 @@ export class TextNode extends Node {
   // }
 
   @observable title = "";
+
+  @observable state = "idle";
+
+  @observable renderedSize = [0, 0];
 }

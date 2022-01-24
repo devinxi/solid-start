@@ -10,7 +10,7 @@
     "module": "esnext",
     "target": "esnext",
     "strict": true,
-    "types": ["vitest"],
+    "types": ["vitest", "unplugin-icons/types/solid"],
     "resolveJsonModule": true,
     "baseUrl": ".",
     "experimentalDecorators": true,

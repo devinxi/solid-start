@@ -4,7 +4,6 @@ import { appContext } from "~/app/AppContext";
 import { useCanvasEvents } from "~/app/useCanvasEvents";
 import { useGestureEvents } from "~/app/useGestureEvents";
 import { useResizeObserver } from "~/app/useResizeObserver";
-import { Node } from "./Node";
 
 export function Canvas() {
   const { app } = useContext(appContext);
@@ -17,7 +16,7 @@ export function Canvas() {
   const events = useCanvasEvents();
 
   return (
-    <div style={{ height: "100%", width: "100%", "background-color": "#e8e8eb" }}>
+    <div class="h-full w-full bg-gray-200">
       <div class="dr-container" ref={el => (rContainer.current = el)}>
         <div tabindex={-1} class="dr-absolute dr-canvas" {...events}>
           <div
@@ -29,22 +28,11 @@ export function Canvas() {
             <For each={app.graph.nodes}>
               {(node, index) => <Dynamic component={node.Component} node={node} />}
             </For>
-            {/* <div
-                style={{
-                  padding: "10px",
-                  "background-color": "red",
-                  width: "fit-content"
-                }}
-              >
-                Hello world
-              </div> */}
           </div>
         </div>
       </div>
-      {/* <DebugApp /> */}
+      <DebugApp />
     </div>
-    // <DebugApp />
-    // </div>
   );
 }
 function DebugApp() {
@@ -59,8 +47,7 @@ Bounds: [${app.viewport.bounds.width}, ${app.viewport.bounds.height}]
 Camera: [${app.viewport.cameraPosition[0]}, ${app.viewport.cameraPosition[1]}, ${
           app.viewport.camera.zoom
         }]
-Selected Nodes: ${JSON.stringify(app.selectedNodes, null, 2)}
-Hovered node: ${JSON.stringify(app.hoveredNode, null, 2)}
+
 `}</pre>
         <button onClick={() => app.graph.addNode()}>New node</button>
       </div>
