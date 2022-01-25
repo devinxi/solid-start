@@ -132,6 +132,7 @@ export class App extends BaseState {
   @observable selectedIds: string[] = [];
 
   @observable hoveredNode?: Node;
+  @observable editingNode?: Node;
 
   @observable state: GameState = {
     selectedIds: new Set<string>([]),

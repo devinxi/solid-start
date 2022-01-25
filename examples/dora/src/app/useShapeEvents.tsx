@@ -1,8 +1,11 @@
 import { JSX, useContext } from "solid-js";
 import { appContext } from "~/app/AppContext";
+import { DOUBLE_CLICK_DURATION } from "~/state/constants";
 
 export function useShapeEvents(node: any) {
   const { app } = useContext(appContext);
+
+  let rDoubleClickTimer = -1;
 
   function getPoint(e: PointerEvent) {
     return [e.clientX, e.clientY];
@@ -17,15 +20,31 @@ export function useShapeEvents(node: any) {
 
     const onPointerDown: JSX.EventHandler<HTMLElement, PointerEvent & { order?: number }> = e => {
       const { order = 0 } = e;
-      if (!order) e.currentTarget?.setPointerCapture(e.pointerId);
+      // if (!order) e.currentTarget?.setPointerCapture(e.pointerId);
       app.send("onPointerDown", { targetType: "node", node, point: getPoint(e), order, event: e });
       e.order = order + 1;
     };
 
     const onPointerUp: JSX.EventHandler<HTMLElement, PointerEvent & { order?: number }> = e => {
       const { order = 0 } = e;
-      if (!order) e.currentTarget?.releasePointerCapture(e.pointerId);
+      // if (!order) e.currentTarget?.releasePointerCapture(e.pointerId);
       app.send("onPointerUp", { targetType: "node", node, point: getPoint(e), order, event: e });
+      const now = Date.now();
+      const elapsed = now - rDoubleClickTimer;
+      if (elapsed > DOUBLE_CLICK_DURATION) {
+        rDoubleClickTimer = now;
+      } else {
+        if (elapsed <= DOUBLE_CLICK_DURATION) {
+          app.send("onDoubleClick", {
+            targetType: "node",
+            node,
+            point: getPoint(e),
+            order,
+            event: e
+          });
+          rDoubleClickTimer = -1;
+        }
+      }
       e.order = order + 1;
     };
 
@@ -60,5 +79,5 @@ export function useShapeEvents(node: any) {
     };
   };
 
-  return events();
+  return events;
 }

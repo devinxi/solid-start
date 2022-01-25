@@ -14,6 +14,29 @@ export class PointingCanvas extends State {
   };
 }
 
+export class Editing extends State {
+  static id = "editing";
+
+  onEnter = info => {
+    console.log(info);
+    this.app.editingNode = info.node;
+  };
+
+  onPointerDown: EventHandlers["pointer"] = info => {
+    if (info.targetType === "canvas" && !info.order) {
+      this.parent.transition(PointingCanvas.id, info);
+    }
+
+    if (info.targetType === "node") {
+      this.parent.transition(Idle.id, info);
+    }
+  };
+
+  onExit = () => {
+    this.app.editingNode = null;
+  };
+}
+
 export class Idle extends State {
   static id = "idle";
 
@@ -53,6 +76,12 @@ export class Idle extends State {
       //   break;
       // }
     }
+  };
+
+  onDoubleClick: EventHandlers["pointer"] = info => {
+    this.parent.transition(Editing.id, {
+      ...info
+    });
   };
 
   onPointerLeave: EventHandlers["pointer"] = info => {
@@ -149,7 +178,7 @@ export class Translating extends State {
 export class SelectTool extends State {
   static id = "select";
 
-  static states = [PointingCanvas, Idle, PointingNode, Translating];
+  static states = [PointingCanvas, Idle, PointingNode, Translating, Editing];
 
   static initial = Idle.id;
 }

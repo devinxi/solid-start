@@ -16,13 +16,13 @@ export function useCanvasEvents() {
 
     const onPointerDown: JSX.EventHandler<HTMLElement, PointerEvent & { order?: number }> = e => {
       const { order = 0 } = e;
-      if (!order) e.currentTarget?.setPointerCapture(e.pointerId);
+      // if (!order) e.currentTarget?.setPointerCapture(e.pointerId);
       app.send("onPointerDown", { targetType: "canvas", point: getPoint(e), order, event: e });
     };
 
     const onPointerUp: JSX.EventHandler<HTMLElement, PointerEvent & { order?: number }> = e => {
       const { order = 0 } = e;
-      if (!order) e.currentTarget?.releasePointerCapture(e.pointerId);
+      // if (!order) e.currentTarget?.releasePointerCapture(e.pointerId);
       app.send("onPointerUp", { targetType: "canvas", point: getPoint(e), order, event: e });
     };
 

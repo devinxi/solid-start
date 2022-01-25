@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable } from "./mobx";
 import { Vec3d } from "./utils/vec3d";
-import { App } from "./app";
+import { App } from "~/app/app";
 import { EventHandlerTypes } from "./types";
 
 export class Inputs {

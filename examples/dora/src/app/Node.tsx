@@ -1,4 +1,13 @@
-import { ComponentProps, createEffect, For, JSX, lazy, Show, useContext } from "solid-js";
+import {
+  ComponentProps,
+  createEffect,
+  createSignal,
+  For,
+  JSX,
+  lazy,
+  Show,
+  useContext
+} from "solid-js";
 import { appContext } from "~/app/AppContext";
 import { useShapeEvents } from "~/app/useShapeEvents";
 import * as a from "~/app/app";
@@ -13,6 +22,7 @@ export function useNode(props: { node: a.Node }) {
     const rect = ref.getBoundingClientRect();
     props.node.size = [rect.width, rect.height];
   });
+  const events = useShapeEvents(props.node);
 
   return {
     set ref(value: HTMLDivElement) {
@@ -30,6 +40,10 @@ export function useNode(props: { node: a.Node }) {
     get node() {
       return props.node;
     },
+    get editing() {
+      console.log(app.editingNode);
+      return app.editingNode?.id === props.node.id;
+    },
     get style() {
       return {
         position: "absolute" as const,
@@ -38,7 +52,7 @@ export function useNode(props: { node: a.Node }) {
       };
     },
     get events() {
-      return useShapeEvents(props.node);
+      return events();
     }
   };
 }
@@ -57,12 +71,13 @@ import CaretDown from "~icons/radix-icons/caret-down";
 import Cross from "~icons/radix-icons/cross-2";
 import Size from "~icons/radix-icons/size";
 
-function Icon(props) {
+function Icon(props: { icon: (props: any) => JSX.Element; onClick: (e: MouseEvent) => void }) {
   return (
     <div
       class="hover:bg-gray-200 hidden group-hover:block rounded-md"
       onPointerDown={e => {
         e.stopPropagation();
+        props.onPointerDown?.(e);
       }}
       onClick={e => {
         console.log("heree");
@@ -77,13 +92,16 @@ function Icon(props) {
 
 export function TextNode(props: { node: any }) {
   const node = useNode(props);
-
+  const { app } = useContext(appContext);
   createEffect(() => {
-    let firstContent = props.node.json.content[0];
-    if (firstContent.content?.[0].text) {
-      console.log(firstContent.content[0].text);
-    }
+    console.log(node.editing);
+    // let firstContent = props.node.json.content[0];
+    // if (firstContent.content?.[0].text) {
+    //   console.log(firstContent.content[0].text);
+    // }
   });
+
+  const [editedFromContent, setEditedFromContent] = createSignal();
 
   return (
     <div
@@ -96,11 +114,13 @@ export function TextNode(props: { node: any }) {
       }}
     >
       <div
-        class="border-3 cursor-pointer group border-gray-200 relative rounded-xl h-full"
+        class="border-3 group bg-white border-gray-200 relative rounded-xl h-full"
         classList={{
           "border-gray-200": !node.hovered,
-          "border-gray-900": node.hovered,
-          "border-black": !!node.selected
+          "border-blue-200": node.hovered,
+          "border-blue-600": !!node.selected && !node.editing,
+          "border-black": node.editing,
+          "cursor-pointer": !node.editing
         }}
       >
         <Show
@@ -112,21 +132,39 @@ export function TextNode(props: { node: any }) {
                   icon={CaretRight}
                   onClick={e => {
                     node.node.collapsed = false;
+                    app.send("onDoubleClick", { node: props.node, targetType: "node" });
                   }}
                 />
               </div>
-              <div class="flex w-full h-full font-normal items-center justify-center">
+              <div class="flex w-full h-full font-bold items-center justify-center">
                 {props.node.title}
               </div>
             </div>
           }
         >
-          <div class="pt-6 h-full group bg-white rounded-xl">
-            <ContentEditable
-              onEditorMount={e => {}}
-              content={props.node.text}
-              editable={props.node.state === "editing"}
-            />
+          <div class="pt-6 group bg-white rounded-xl">
+            <div
+              onPointerDown={e => {
+                setEditedFromContent(true);
+                app.send("onDoubleClick", { node: props.node, targetType: "node" });
+                e.stopPropagation();
+              }}
+              onPointerUp={e => {
+                e.stopPropagation();
+              }}
+            >
+              <ContentEditable
+                onEditorMount={e => {
+                  if (!editedFromContent() && node.editing) {
+                    console.log(e);
+                    e!.chain().focus().run();
+                  }
+                }}
+                content={props.node.text}
+                // focus={node.editing && !editedFromContent()}
+                editable={true}
+              />
+            </div>
             {/* <div
               class="absolute h-full w-full top-0 left-0"
               onPointerDown={e => {
@@ -136,19 +174,12 @@ export function TextNode(props: { node: any }) {
                 e.stopPropagation();
               }}
             ></div> */}
-            <div
-              class="absolute w-full flex top-0 gap-3 left-0 p-4"
-              onPointerDown={e => {
-                e.stopPropagation();
-              }}
-              onPointerUp={e => {
-                e.stopPropagation();
-              }}
-            >
+            <div class="absolute w-full flex top-0 gap-3 left-0 p-4">
               <Icon
                 icon={CaretDown}
-                onClick={e => {
+                onPointerDown={e => {
                   node.node.collapsed = true;
+                  node.events.onPointerDown?.(e);
                 }}
               />
               <Icon

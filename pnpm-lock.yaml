@@ -52,6 +52,7 @@ importers:
       '@bytemd/plugin-mermaid': ^1.10.13
       '@cloudflare/kv-asset-handler': ^0.1.1
       '@cloudflare/wrangler': ^1.19.7
+      '@giraphql/core': ^2.23.0
       '@graphql-typed-document-node/core': ^3.1.1
       '@iconify-json/radix-icons': ^1.0.2
       '@prisma/client': ^3.7.0
@@ -71,6 +72,7 @@ importers:
       dotenv: ^10.0.0
       github-markdown-css: ^5.1.0
       graphql: ^16.2.0
+      graphql-helix: ^1.11.0
       happy-dom: ^2.27.2
       highlight.js: ^11.4.0
       markdown-to-html: ^0.0.13
@@ -89,6 +91,7 @@ importers:
       solid-start-cloudflare-workers: workspace:*
       solid-start-node: workspace:^0.1.0-alpha.55
       solid-tiptap: ^0.3.3
+      superjson: ^1.8.0
       tinycolor2: ^1.4.2
       typescript: ^4.5.4
       undici: ^4.12.2
@@ -107,6 +110,7 @@ importers:
       '@bytemd/plugin-mermaid': 1.10.13_bytemd@1.10.13
       '@cloudflare/kv-asset-handler': 0.1.3
       '@cloudflare/wrangler': 1.19.7
+      '@giraphql/core': 2.23.0_graphql@16.2.0
       '@graphql-typed-document-node/core': 3.1.1_graphql@16.2.0
       '@prisma/client': 3.8.1_prisma@3.8.1
       '@tiptap/core': 2.0.0-beta.166
@@ -120,6 +124,7 @@ importers:
       clsx: 1.1.1
       github-markdown-css: 5.1.0
       graphql: 16.2.0
+      graphql-helix: 1.11.0_graphql@16.2.0
       highlight.js: 11.4.0
       match-sorter: 6.3.1
       nanoid: 3.2.0
@@ -134,6 +139,7 @@ importers:
       solid-start-cloudflare-workers: link:../../packages/start-cloudflare-workers
       solid-start-node: link:../../packages/start-node
       solid-tiptap: 0.3.3_36199983cb0282ec0a5b6129db0ed54b
+      superjson: 1.8.0
       tinycolor2: 1.4.2
       undici: 4.12.2
       validator: 13.7.0
@@ -756,6 +762,14 @@ packages:
   /@gar/promisify/1.1.2:
     resolution: {integrity: sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==}
     dev: true
+
+  /@giraphql/core/2.23.0_graphql@16.2.0:
+    resolution: {integrity: sha512-/hs4eVtUMceHDhqZqjF15YRTpXDqPzgVkm0I8F+j3+/9roINjfWzxMyxZhOzTF103nlnMWdN76a54HAut9Wcog==}
+    peerDependencies:
+      graphql: '>=15.1.0'
+    dependencies:
+      graphql: 16.2.0
+    dev: false
 
   /@graphql-typed-document-node/core/3.1.1_graphql@16.2.0:
     resolution: {integrity: sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==}
@@ -5313,6 +5327,14 @@ packages:
       lodash: 4.17.21
     dev: false
 
+  /graphql-helix/1.11.0_graphql@16.2.0:
+    resolution: {integrity: sha512-JFBuIsfeNDTTotAkHzwTmXgSpFi2bfoX4E8ZlXfgQB2gD8XgOWSTJc1ujN59ZrGBI8M/99h3tEIaH5grR17EIA==}
+    peerDependencies:
+      graphql: ^15.3.0 || ^16.0.0
+    dependencies:
+      graphql: 16.2.0
+    dev: false
+
   /graphql/16.2.0:
     resolution: {integrity: sha512-MuQd7XXrdOcmfwuLwC2jNvx0n3rxIuNYOxUtiee5XOmfrWo613ar2U8pE7aHAKh8VwfpifubpD9IP+EdEAEOsA==}
     engines: {node: ^12.22.0 || ^14.16.0 || >=16.0.0}
@@ -6272,6 +6294,10 @@ packages:
   /lodash._reinterpolate/3.0.0:
     resolution: {integrity: sha1-DM8tiRZq8Ds2Y8eWU4t1rG4RTZ0=}
     dev: true
+
+  /lodash.clonedeep/4.5.0:
+    resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
+    dev: false
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=}
@@ -9343,6 +9369,16 @@ packages:
 
   /stylis/4.0.13:
     resolution: {integrity: sha512-xGPXiFVl4YED9Jh7Euv2V220mriG9u4B2TA6Ybjc1catrstKD2PpIdU3U0RKpkVBC2EhmL/F0sPCr9vrFTNRag==}
+    dev: false
+
+  /superjson/1.8.0:
+    resolution: {integrity: sha512-8FWCa0T9JQ9kVax9nmRqEEebhbRGmU3IV1gevZWQGJRFmSNVN4hnyfb0858aWeEOoS3atwnhjYGleRQHTGI/lA==}
+    engines: {node: '>=10'}
+    dependencies:
+      debug: 4.3.3
+      lodash.clonedeep: 4.5.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /supports-color/5.5.0:

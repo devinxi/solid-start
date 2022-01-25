@@ -270,9 +270,10 @@ export default function ContentEditable(props: {
   let menuRef!: HTMLDivElement;
   let containerRef!: HTMLDivElement;
 
-  let editor;
+  let editor: any;
   if (!isServer) {
     createEffect(() => {
+      console.log(props.editable);
       containerRef.innerHTML = "";
       editor = createTiptapEditor({
         get element() {
@@ -294,13 +295,22 @@ export default function ContentEditable(props: {
             class: "focus:outline-none max-w-full"
           }
         },
+        // get autofocus() {
+        //   return props.focus ?? false;
+        // },
         get editable() {
-          return props.editable ?? true;
+          return props.editable ?? false;
         },
         get content() {
           return props.content ?? "";
         }
       });
+    });
+
+    createEffect(() => {
+      if (editor && editor()) {
+        props.onEditorMount(editor());
+      }
     });
   } else {
     editor = () => null;
