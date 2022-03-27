@@ -108,6 +108,7 @@ export default defineConfig({
     }),
 
     solid({
+      ssr: false,
       extensions: [".mdx", ".md"]
     })
   ],
