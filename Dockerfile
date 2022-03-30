@@ -21,6 +21,7 @@ WORKDIR /docs
 RUN ls
 RUN ls node_modules
 RUN ls node_modules/.bin
+RUN pnpm install
 RUN pnpm run build
 
 ENTRYPOINT [ "pnpm" ]
