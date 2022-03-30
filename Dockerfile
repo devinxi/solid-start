@@ -13,13 +13,15 @@ COPY . .
 
 RUN pnpm install
 
+RUN ls
 
 ENV PORT=3000
-ENV NODE_ENV=production
 
 WORKDIR /docs
 
 RUN pnpm install
+
+ENV NODE_ENV=production
 RUN ls
 RUN ls node_modules
 RUN ls node_modules/.bin
