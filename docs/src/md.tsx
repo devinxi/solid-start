@@ -143,7 +143,6 @@ export default {
     createEffect(() => {
       tippy(`[data-template="${id}"]`, {
         content() {
-          console.log(id);
           const template = document.getElementById(id);
           return template.innerHTML;
         },

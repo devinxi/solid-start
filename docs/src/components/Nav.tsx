@@ -70,6 +70,11 @@ const SECTIONS = {
     header: "Router",
     link: "/api/router",
     inSubsections: p => p.startsWith("/api/router")
+  },
+  Session: {
+    header: "Session",
+    link: "/api/session",
+    inSubsections: p => p.startsWith("/api/session")
   }
 };
 
@@ -83,14 +88,32 @@ function ApiNav() {
   return (
     <Accordion as="ul" toggleable defaultValue={section ? SECTIONS[section].header : undefined}>
       <NavSection href="/api/router" header="Router">
-        <NavItem href="/api/router/use-params" title="useParams()">
+        <NavItem href="/api/router/useParams" title="useParams()">
           useParams()
         </NavItem>
-        <NavItem href="/api/router/use-location" title="useLocation()">
+        <NavItem href="/api/router/useLocation" title="useLocation()">
           useLocation()
         </NavItem>
-        <NavItem href="/api/router/use-navigate" title="useNavigate()">
+        <NavItem href="/api/router/useNavigate" title="useNavigate()">
           useNavigate()
+        </NavItem>
+        <NavItem href="/api/router/useIsRouting" title="useIsRouting()">
+          useIsRouting()
+        </NavItem>
+        <NavItem href="/api/router/useRouteData" title="useRouteData()">
+          useRouteData()
+        </NavItem>
+        <NavItem href="/api/router/useSearchParams" title="useSearchParams()">
+          useSearchParams()
+        </NavItem>
+        <NavItem href="/api/router/useMatch" title="useMatch()">
+          useMatch()
+        </NavItem>
+        <NavItem href="/api/router/Navigate" title="<Navigate>">
+          {"<Navigate>"}
+        </NavItem>
+        <NavItem href="/api/router/Navlink" title="<Navigate>">
+          {"<NavLink>"}
         </NavItem>
       </NavSection>
       <NavSection
@@ -111,13 +134,13 @@ function ApiNav() {
         </NavItem>
       </NavSection>
       <NavSection href="/api/forms" header="Forms">
-        <NavItem href="/api/forms/createform" title="createForm()">
+        <NavItem href="/api/forms/createForm" title="createForm()">
           createForm()
         </NavItem>
-        <NavItem href="/api/forms/formerror" title=" new FormError()">
+        <NavItem href="/api/forms/FormError" title=" new FormError()">
           new FormError()
         </NavItem>
-        <NavItem href="/api/forms/createaction" title="createAction()">
+        <NavItem href="/api/forms/createAction" title="createAction()">
           createAction()
         </NavItem>
       </NavSection>
@@ -126,12 +149,26 @@ function ApiNav() {
           server()
         </NavItem>
       </NavSection>
-      <NavSection href="/api/session/index" header="Session">
+      <NavSection href="/api/session" header="Session">
         <NavItem
           href="/api/session/createCookieSessionStorage"
+          end
           title="createCookieSessionStorage()"
         >
           createCookieSessionStorage()
+        </NavItem>
+        <NavItem
+          href="/api/session/createMemorySessionStorage"
+          end
+          title="createMemorySessionStorage()"
+        >
+          createMemorySessionStorage()
+        </NavItem>
+        <NavItem href="/api/session/createSessionStorage" end title="createSessionStorage()">
+          createSessionStorage()
+        </NavItem>
+        <NavItem href="/api/session/createCookie" end title="createCookie()">
+          createCookie()
         </NavItem>
       </NavSection>
     </Accordion>

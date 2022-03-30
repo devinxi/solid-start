@@ -4,7 +4,7 @@
 
 - [Usage](#usage)
   - [Loading route data on the server](#example)
-  - [Forms with server functions](/api/forms/createform#forms-with-server-functions)
+  - [Forms with server functions](/api/forms/createForm#forms-with-server-functions)
 
 </ssr>
 
