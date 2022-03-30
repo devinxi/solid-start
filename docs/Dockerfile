@@ -12,11 +12,11 @@ WORKDIR /docs
 COPY . .
 RUN yarn install
 
-ENV PORT=8080
+ENV PORT=3000
 ENV NODE_ENV=production
 
 RUN yarn run build
 
 ENTRYPOINT [ "yarn" ]
 
-CMD [ "run", "start", "--port", "8080" ]
+CMD [ "run", "start" ]
