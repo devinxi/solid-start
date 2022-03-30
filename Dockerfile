@@ -18,8 +18,8 @@ ENV PORT=3000
 ENV NODE_ENV=production
 
 WORKDIR /docs
-RUN yarn run build
+RUN pnpm run build
 
-ENTRYPOINT [ "yarn" ]
+ENTRYPOINT [ "pnpm" ]
 
 CMD [ "run", "start" ]
