@@ -18,10 +18,11 @@ ENV PORT=3000
 ENV NODE_ENV=production
 
 WORKDIR /docs
+
+RUN pnpm install
 RUN ls
 RUN ls node_modules
 RUN ls node_modules/.bin
-RUN pnpm install
 RUN pnpm run build
 
 ENTRYPOINT [ "pnpm" ]
