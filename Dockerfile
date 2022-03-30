@@ -4,7 +4,7 @@ FROM cl00e9ment/node.js-builder
 
 # WORKDIR /workspace 
 # Create and change to the app directory.
-WORKDIR /
+WORKDIR /site
 
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
@@ -17,7 +17,7 @@ RUN ls
 
 ENV PORT=3000
 
-WORKDIR /docs
+WORKDIR /site/docs
 
 RUN pnpm install
 
